@@ -1,5 +1,8 @@
 "use strict";
 
+var timedEventsList = new Map(),
+    idCounter = 1;
+
 class TimedEvent {
     constructor(generator, start, freq, end) {
         this.generator = generator;
@@ -30,40 +33,75 @@ class TimedEvent {
     }
 }
 
+function getNextId() {
+    return idCounter++;
+}
+
 function getFormattedDate(){
     return (new Date()).toISOString();
 }
 
-function* timedThing(id) {
-    console.log("[%s][%d] Do the preparations", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] Do the first step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] Do the second step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] Do the third step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] Do the fourth step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] Finish", getFormattedDate(), id);
-    return;
-}
-
-function run(frequency, timed) {
+function run(frequency) {
     var intervalId;
 
     intervalId = setInterval(function() {
-        var finished = timed.next();
+        timedEventsList.forEach(function(value, key) {
+            var finished = false;
 
-        if  (finished) {
+            if (value.isReady) {
+                finished = value.next();
+
+                if (finished) {
+                    timedEventsList.delete(key);
+                }
+            }
+        });
+
+        if  (timedEventsList.size === 0) {
             clearInterval(intervalId);
         }
     }, frequency);
 }
 
-var theThing = timedThing(1),
-    t1 = new TimedEvent(theThing, new Date().getTime() + 30*1000, null);
+function push(timedEvent) {
+    timedEventsList.set(getNextId(), timedEvent);
+}
 
+// Example
+//-----------------------------------------------------------------------------------------------
 
+function tabs(n) {
+    var tabulation = '';
 
-run(2000, t1);
+    for (var i=0; i < n; i++) {
+        tabulation += '\t\t\t\t\t\t\t\t\t\t\t\t';
+    }
+
+    return tabulation;
+}
+
+function* timedThing(id) {
+    console.log("[%s][%d] " + tabs(id) + "Do the preparations", getFormattedDate(), id);
+    yield;
+    console.log("[%s][%d] " + tabs(id) + "Do the first step", getFormattedDate(), id);
+    yield;
+    console.log("[%s][%d] " + tabs(id) + "Do the second step", getFormattedDate(), id);
+    yield;
+    console.log("[%s][%d] " + tabs(id) + "Do the third step", getFormattedDate(), id);
+    yield;
+    console.log("[%s][%d] " + tabs(id) + "Do the fourth step", getFormattedDate(), id);
+    yield;
+    console.log("[%s][%d] " + tabs(id) + "Finish", getFormattedDate(), id);
+    return;
+}
+
+var theThing,
+    ts = [];
+
+for (var i = 0; i < 5; i++) {
+    theThing = timedThing(i);
+    ts.push(new TimedEvent(theThing, new Date().getTime() + 10*1000 + 2000*i, null));
+}
+
+ts.map(push);
+run(1000);
