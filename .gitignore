@@ -1,1 +1,16 @@
-.idea
+.DS_Store
+/node_modules/
+/.idea/
+/coverage/
+/site
+/report/
+/.c9revisions/
+/.settings/
+
+.settings
+.classpath
+.project
+.metadata
+npm-debug.log
+
+

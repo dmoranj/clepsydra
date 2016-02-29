@@ -2,7 +2,7 @@
 
 var fs = require('fs'),
     utils = require('./exampleUtils'),
-    clepsydra = require('../index.js');
+    clepsydra = require('../lib/clepsydra.js');
 
 function tabs(n) {
     var tabulation = '';
