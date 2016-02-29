@@ -1,7 +1,6 @@
 "use strict";
 
 var timedEventsList = new Map(),
-    fs = require('fs'),
     idCounter = 1;
 
 class TimedEvent {
@@ -84,73 +83,12 @@ function run(frequency) {
 }
 
 function push(timedEvent) {
-    timedEventsList.set(getNextId(), timedEvent);
+    var currentId = getNextId();
+    timedEventsList.set(currentId, timedEvent);
+    return currentId;
 }
 
-// Example
-//-----------------------------------------------------------------------------------------------
-
-function tabs(n) {
-    var tabulation = '';
-
-    for (var i=0; i < n; i++) {
-        tabulation += '\t\t\t\t\t\t\t\t\t\t\t\t';
-    }
-
-    return tabulation;
-}
-
-function* timedThing(id) {
-    console.log("[%s][%d] " + tabs(id) + "Do the preparations", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] " + tabs(id) + "Do the first step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] " + tabs(id) + "Do the second step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] " + tabs(id) + "Do the third step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] " + tabs(id) + "Do the fourth step", getFormattedDate(), id);
-    yield;
-    console.log("[%s][%d] " + tabs(id) + "Finish", getFormattedDate(), id);
-    return;
-}
-
-function* complexTimedThing(id) {
-    var data,
-        parsedData,
-        newData;
-
-    console.log("[%s][%d] " + tabs(id) + "Reading the package.json file", getFormattedDate(), id);
-    data = yield fs.readFile.bind(null, './package.json', 'utf8');
-
-    console.log("[%s][%d] " + tabs(id) + "Write to file", getFormattedDate(), id);
-    parsedData = JSON.parse(data);
-
-    newData = `
-        This project has the following name
-
-        The Absolutely Amazing ${parsedData.name}
-        ---------------------------------------
-
-        Using ECMAScript 6 from 2016.
-
-        Edition ${id}
-
-        `;
-
-    yield fs.writeFile.bind(null, `title_${id}.txt`, newData);
-
-    console.log("[%s][%d] " + tabs(id) + "Finish", getFormattedDate(), id);
-    return;
-}
-
-var theThing,
-    ts = [];
-
-for (var i = 0; i < 5; i++) {
-    theThing = complexTimedThing(i);
-    ts.push(new TimedEvent(theThing, new Date().getTime() + 10*1000 + 2000*i, null));
-}
-
-ts.map(push);
-run(1000);
+exports.push = push;
+exports.getFormattedDate = getFormattedDate;
+exports.TimedEvent = TimedEvent;
+exports.run = run;
