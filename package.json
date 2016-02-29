@@ -1,11 +1,17 @@
 {
-  "name": "pruebas-node5",
-  "version": "1.0.0",
-  "description": "",
+  "name": "clepsydra",
+  "description": "Library for the execution of asynchronous events with timed steps",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": {
+    "name": "Daniel Moran",
+    "email": "daniel.moranjimenez@telefonica.com"
+  },
+  "engines": {
+    "node": ">=5.7.0"
+  }
+  
 }
