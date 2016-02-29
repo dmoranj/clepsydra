@@ -1,6 +1,7 @@
 "use strict";
 
 var timedEventsList = new Map(),
+    fs = require('fs'),
     idCounter = 1;
 
 class TimedEvent {
@@ -11,7 +12,17 @@ class TimedEvent {
         this.end = end;
         this.lastAction = new Date().getTime();
         this.startingTime = this.lastAction;
-        this.generator.next();
+        this.status = Symbol.for('READY');
+        this.asyncValue = null;
+    }
+
+    setStatus(newStatus) {
+        this.status = newStatus;
+    }
+
+    setResult(newResult) {
+        this.asyncValue = newResult;
+        this.setStatus(Symbol.for('READY'));
     }
 
     next() {
@@ -22,14 +33,14 @@ class TimedEvent {
             ret = this.generator.throw(new Error("TIMED_OUT"));
         } else {
             this.lastAction = new Date().getTime();
-            ret = this.generator.next();
+            ret = this.generator.next(this.asyncValue);
         }
 
-        return ret.done;
+        return ret;
     }
 
     get isReady() {
-        return new Date().getTime() > this.start;
+        return (new Date().getTime() > this.start) && (this.status === Symbol.for('READY'));
     }
 }
 
@@ -45,14 +56,23 @@ function run(frequency) {
     var intervalId;
 
     intervalId = setInterval(function() {
-        timedEventsList.forEach(function(value, key) {
-            var finished = false;
+        timedEventsList.forEach(function(timedEvent, key) {
+            var returnValue;
 
-            if (value.isReady) {
-                finished = value.next();
+            if (timedEvent.isReady) {
+                returnValue = timedEvent.next();
 
-                if (finished) {
+                if (returnValue.done) {
                     timedEventsList.delete(key);
+                } else if (typeof returnValue.value === 'function') {
+                    timedEvent.setStatus(Symbol.for('ASYNC'));
+
+                    returnValue.value((error, value) => {
+                        timedEvent.setResult(value);
+                    });
+
+                } else {
+                    timedEvent.setStatus(Symbol.for('READY'));
                 }
             }
         });
@@ -95,11 +115,40 @@ function* timedThing(id) {
     return;
 }
 
+function* complexTimedThing(id) {
+    var data,
+        parsedData,
+        newData;
+
+    console.log("[%s][%d] " + tabs(id) + "Reading the package.json file", getFormattedDate(), id);
+    data = yield fs.readFile.bind(null, './package.json', 'utf8');
+
+    console.log("[%s][%d] " + tabs(id) + "Write to file", getFormattedDate(), id);
+    parsedData = JSON.parse(data);
+
+    newData = `
+        This project has the following name
+
+        The Absolutely Amazing ${parsedData.name}
+        ---------------------------------------
+
+        Using ECMAScript 6 from 2016.
+
+        Edition ${id}
+
+        `;
+
+    yield fs.writeFile.bind(null, `title_${id}.txt`, newData);
+
+    console.log("[%s][%d] " + tabs(id) + "Finish", getFormattedDate(), id);
+    return;
+}
+
 var theThing,
     ts = [];
 
 for (var i = 0; i < 5; i++) {
-    theThing = timedThing(i);
+    theThing = complexTimedThing(i);
     ts.push(new TimedEvent(theThing, new Date().getTime() + 10*1000 + 2000*i, null));
 }
 

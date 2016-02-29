@@ -1,0 +1,5 @@
+- Add support for Promises
+- Add support for a callback when the timedEvent has finished
+- Add tests for the functionality
+- Check how the errors are behaving and fix decent error model
+- Add utility functions to make specific yields yield at specific times (+3 min, 12/01/2018, etc. )
