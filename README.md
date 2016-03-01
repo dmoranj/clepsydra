@@ -21,7 +21,8 @@ time slot.
 
 *Disclaimer*: this library was originally meant to be used as a didactic project to practice and learn ECMAScript 6 features,
 so no support is given or expected regarding its use in production systems. For the same reason, all the provided
-examples, as well as the library itself run only under Node.js v5.7.0 or higher, with the `--es_staging` flag.
+examples, as well as the library itself run only under Node.js v5.7.0 or higher, with the `--es_staging` and
+`--harmony_destructuring` flags.
 
 This library is release under the GNU AFFERO GENERAL PUBLIC LICENSE a copy of which you can find in this same repository.
 

@@ -2,5 +2,4 @@
 - Add tests for the functionality
 - Check how the errors are behaving and fix decent error model
 - Add utility functions to make specific yields yield at specific times (+3 min, 12/01/2018, etc. )
-- Accept n parameters in callbacks through the rest and spread operators
 - Create a class for the runner, so multiple runners can be simultaneously running.

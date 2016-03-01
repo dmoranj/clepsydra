@@ -13,6 +13,10 @@
     "node": ">=5.7.0"
   },
   "main": "lib/fiware-iotagent-lib",
+  "dependencies": {
+    "request": "*",
+    "jsdom": "*"
+  },
   "devDependencies": {
     "should": "*",
     "nock": "*",
