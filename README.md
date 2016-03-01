@@ -128,7 +128,7 @@ function* complexTimedThing(id) {
 }
 ```
 
-In this case, the execution
+
 
 ##  <a name="api"/> API Specification
 
@@ -145,4 +145,10 @@ Executes all the Timed Events in the event list. It takes two parameters:
 * `frequency`: indicating the default frequency for the runner.
 * `callback`: this callback will be invoked with a map of the results of all the executed Timed Event, or with an error
 if there was any.
+
+#### bindToPromise(fn, ...args)
+This utility function creates a Promised from a callback-based function. The first argument is considered to be the function
+to invoke. The rest of the arguments will be passed to the invoked function. The function will be also passed a callback;
+if the callback results in an error, the Promise will be rejected; if the callback returns a value (or a list of values),
+the promise will be resolved with that value (or list of values).
 
