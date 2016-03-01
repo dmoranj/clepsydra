@@ -5,7 +5,7 @@ var fs = require('fs'),
     clepsydra = require('../lib/clepsydra.js');
 
 function* complexTimedThing(id) {
-    var data,
+    let data,
         parsedData,
         newData;
 
