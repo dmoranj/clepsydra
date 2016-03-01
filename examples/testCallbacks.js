@@ -33,14 +33,8 @@ function* complexTimedThing(id) {
     return;
 }
 
-var theThing,
-    ts = [];
-
 for (var i = 0; i < 5; i++) {
-    theThing = complexTimedThing(i);
-    ts.push(new clepsydra.TimedEvent(theThing, new Date().getTime() + 10*1000 + 2000*i, null));
+    clepsydra.push(new clepsydra.TimedEvent(complexTimedThing(i), new Date().getTime() + 10*1000 + 2000*i, null));
 }
-
-ts.map(clepsydra.push);
 
 clepsydra.run(1000);

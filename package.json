@@ -16,6 +16,7 @@
   "devDependencies": {
     "should": "*",
     "nock": "*",
+    "async": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-watch": "~0.5.3",
     "grunt": "~0.4.1",
