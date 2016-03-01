@@ -1,4 +1,3 @@
-- Add support for Promises
 - Add support for a callback when the timedEvent has finished
 - Add tests for the functionality
 - Check how the errors are behaving and fix decent error model
